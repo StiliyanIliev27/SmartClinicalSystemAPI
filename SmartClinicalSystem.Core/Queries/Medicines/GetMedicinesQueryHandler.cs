@@ -15,12 +15,12 @@ namespace SmartClinicalSystem.Core.Queries.Medicines
             var pageNumber = query.PageNumber ?? 1;
             var pageSize = query.PageSize ?? 10;
 
-            var products = await repository.AllReadOnly<Medicine>()
+            var medicines = await repository.AllReadOnly<Medicine>()
                 .Skip((pageNumber - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
 
-            return new GetMedicinesResult(products);
+            return new GetMedicinesResult(medicines);
         }
     }
 }

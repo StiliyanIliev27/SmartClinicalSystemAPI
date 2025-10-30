@@ -11,6 +11,11 @@ namespace SmartClinicalSystem.Core.DTOs.Medicine
         public string Manufacturer { get; set; } = null!;
         public decimal Price { get; set; }
         public int StockQuantity { get; set; }
+        public string? Description { get; set; }
+        public string? Indications { get; set; }
+        public string? Contraindications { get; set; }
+        public string? SideEffects { get; set; }
+        public string? Precautions { get; set; }
 
         public MedicineCategory GetMedicineCategory()
         {

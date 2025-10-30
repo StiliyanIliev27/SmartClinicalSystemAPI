@@ -32,6 +32,11 @@ namespace SmartClinicalSystem.Core.Commands.Medicines
             medicine.DosageForm = updateMedicineDTO.DosageForm;
             medicine.Manufacturer = updateMedicineDTO.Manufacturer;
             medicine.Price = updateMedicineDTO.Price;
+            medicine.Contraindications = updateMedicineDTO.Contraindications;
+            medicine.Precautions = updateMedicineDTO.Precautions;
+            medicine.Indications = updateMedicineDTO.Indications;
+            medicine.Description = updateMedicineDTO.Description;
+            medicine.SideEffects = updateMedicineDTO.SideEffects;
             medicine.UpdatedAt = DateTime.Now;
 
             return Task.CompletedTask;

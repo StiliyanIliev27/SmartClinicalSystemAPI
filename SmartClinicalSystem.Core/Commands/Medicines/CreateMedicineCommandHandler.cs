@@ -61,6 +61,11 @@ namespace SmartClinicalSystem.Core.Commands.Medicines
                 DosageForm = request.CreateMedicineDto.DosageForm,
                 Manufacturer = request.CreateMedicineDto.Manufacturer,
                 Price = request.CreateMedicineDto.Price,
+                SideEffects = request.CreateMedicineDto.SideEffects,
+                Contraindications = request.CreateMedicineDto.Contraindications,
+                Indications = request.CreateMedicineDto.Indications,
+                Description = request.CreateMedicineDto.Description,
+                Precautions = request.CreateMedicineDto.Precautions,
             };
 
             await repository.AddAsync(medicine);
