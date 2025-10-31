@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace SmartClinicalSystem.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialDB : Migration
+    public partial class InitialDbMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -64,6 +64,13 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                     Manufacturer = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     StockQuantity = table.Column<int>(type: "int", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Indications = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Contraindications = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SideEffects = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Precautions = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AiSummary = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    LastAiUpdated = table.Column<DateTime>(type: "datetime2", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -72,6 +79,25 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Medicines", x => x.MedicineId);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "PromptTemplates",
+                columns: table => new
+                {
+                    PromptTemplateId = table.Column<string>(type: "nvarchar(450)", nullable: false),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Type = table.Column<int>(type: "int", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
+                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PromptTemplates", x => x.PromptTemplateId);
                 });
 
             migrationBuilder.CreateTable(
@@ -214,23 +240,41 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
             migrationBuilder.InsertData(
                 table: "AspNetUsers",
                 columns: new[] { "Id", "AccessFailedCount", "ConcurrencyStamp", "Email", "EmailConfirmed", "LockoutEnabled", "LockoutEnd", "NormalizedEmail", "NormalizedUserName", "PasswordHash", "PhoneNumber", "PhoneNumberConfirmed", "SecurityStamp", "TwoFactorEnabled", "UserName" },
-                values: new object[] { "admin-user-id", 0, "84ada157-7669-4600-b586-5e0ff1b56498", "admin@admin.com", false, false, null, null, "ADMIN", "AQAAAAIAAYagAAAAEJ2pzrXUAbNS/N6Lv8w1HQjC9pgRMgEOZj54mWqDz9BYBuOd88Ui4cNcyCPH9XMVQg==", null, false, "0c74b65f-18bf-4c09-9b7f-0cfed1a2661f", false, "admin" });
+                values: new object[,]
+                {
+                    { "27d78708-8671-4b05-bd5e-17aa91392224", 0, "f759cf48-0439-447f-a708-76d299203917", "admin@admin.com", true, false, null, "ADMIN@ADMIN.COM", null, "AQAAAAIAAYagAAAAELTxtT6aUTh0qfD+giXsR1pdad9cQ3xEAr7qDcaZLSeMfwBPc9M+33a2mU6gdk0Rrw==", null, false, "d5a75b1a-229a-4de1-9153-2d093ee510e6", false, null },
+                    { "f8472c89-f48d-49cc-8517-a81153d47cdd", 0, "fb28312b-6cf2-4f78-a3b5-213eedca60d4", "user@user.com", true, false, null, "USER@USER.COM", null, "AQAAAAIAAYagAAAAEICOOOMUaoaDbsye5I7dtoN4IARfLfcZptUMMIOl0lgpTA8WMDMWTUayFhzmX8TMjQ==", null, false, "95822bb2-6318-4ef2-b83c-776a0c8eaa62", false, null }
+                });
 
             migrationBuilder.InsertData(
                 table: "Medicines",
-                columns: new[] { "MedicineId", "Category", "CreatedAt", "DeletedOn", "DosageForm", "GenericName", "IsDeleted", "Manufacturer", "Price", "StockQuantity", "Strength", "UpdatedAt" },
+                columns: new[] { "MedicineId", "AiSummary", "Category", "Contraindications", "CreatedAt", "DeletedOn", "Description", "DosageForm", "GenericName", "Indications", "IsDeleted", "LastAiUpdated", "Manufacturer", "Precautions", "Price", "SideEffects", "StockQuantity", "Strength", "UpdatedAt" },
                 values: new object[,]
                 {
-                    { "0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y", 11, new DateTime(2025, 10, 29, 22, 30, 57, 82, DateTimeKind.Utc).AddTicks(9245), null, "Tablet", "Cetirizine", false, "AllergyRelief", 1.5m, 500, "10mg", null },
-                    { "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", 1, new DateTime(2025, 10, 29, 22, 30, 57, 82, DateTimeKind.Utc).AddTicks(9203), null, "Tablet", "Paracetamol", false, "PharmaCorp", 2.5m, 100, "500mg", null },
-                    { "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q", 1, new DateTime(2025, 10, 29, 22, 30, 57, 82, DateTimeKind.Utc).AddTicks(9216), null, "Capsule", "Ibuprofen", false, "HealthMeds", 3.0m, 200, "200mg", null },
-                    { "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r", 2, new DateTime(2025, 10, 29, 22, 30, 57, 82, DateTimeKind.Utc).AddTicks(9220), null, "Capsule", "Amoxicillin", false, "MediLife", 5.0m, 150, "250mg", null },
-                    { "4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s", 3, new DateTime(2025, 10, 29, 22, 30, 57, 82, DateTimeKind.Utc).AddTicks(9223), null, "Tablet", "Acyclovir", false, "ViralPharma", 8.0m, 50, "400mg", null },
-                    { "5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t", 4, new DateTime(2025, 10, 29, 22, 30, 57, 82, DateTimeKind.Utc).AddTicks(9227), null, "Capsule", "Fluconazole", false, "FungalCare", 6.0m, 75, "150mg", null },
-                    { "6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u", 7, new DateTime(2025, 10, 29, 22, 30, 57, 82, DateTimeKind.Utc).AddTicks(9230), null, "Tablet", "Metformin", false, "DiabetesCare", 4.0m, 300, "500mg", null },
-                    { "7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v", 6, new DateTime(2025, 10, 29, 22, 30, 57, 82, DateTimeKind.Utc).AddTicks(9233), null, "Tablet", "Losartan", false, "HeartHealth", 3.5m, 250, "50mg", null },
-                    { "8h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w", 9, new DateTime(2025, 10, 29, 22, 30, 57, 82, DateTimeKind.Utc).AddTicks(9236), null, "Capsule", "Omeprazole", false, "DigestiveCare", 2.0m, 400, "20mg", null },
-                    { "9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x", 10, new DateTime(2025, 10, 29, 22, 30, 57, 82, DateTimeKind.Utc).AddTicks(9240), null, "Inhaler", "Salbutamol", false, "BreathEasy", 10.0m, 120, "100mcg", null }
+                    { "0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y", null, 11, null, new DateTime(2025, 10, 30, 23, 30, 36, 209, DateTimeKind.Utc).AddTicks(4969), null, null, "Tablet", "Cetirizine", null, false, null, "AllergyRelief", null, 1.5m, null, 500, "10mg", null },
+                    { "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p", null, 1, null, new DateTime(2025, 10, 30, 23, 30, 36, 209, DateTimeKind.Utc).AddTicks(4906), null, null, "Tablet", "Paracetamol", null, false, null, "PharmaCorp", null, 2.5m, null, 100, "500mg", null },
+                    { "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q", null, 1, null, new DateTime(2025, 10, 30, 23, 30, 36, 209, DateTimeKind.Utc).AddTicks(4918), null, null, "Capsule", "Ibuprofen", null, false, null, "HealthMeds", null, 3.0m, null, 200, "200mg", null },
+                    { "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r", null, 2, null, new DateTime(2025, 10, 30, 23, 30, 36, 209, DateTimeKind.Utc).AddTicks(4923), null, null, "Capsule", "Amoxicillin", null, false, null, "MediLife", null, 5.0m, null, 150, "250mg", null },
+                    { "4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s", null, 3, null, new DateTime(2025, 10, 30, 23, 30, 36, 209, DateTimeKind.Utc).AddTicks(4927), null, null, "Tablet", "Acyclovir", null, false, null, "ViralPharma", null, 8.0m, null, 50, "400mg", null },
+                    { "5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t", null, 4, null, new DateTime(2025, 10, 30, 23, 30, 36, 209, DateTimeKind.Utc).AddTicks(4930), null, null, "Capsule", "Fluconazole", null, false, null, "FungalCare", null, 6.0m, null, 75, "150mg", null },
+                    { "6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u", null, 7, null, new DateTime(2025, 10, 30, 23, 30, 36, 209, DateTimeKind.Utc).AddTicks(4950), null, null, "Tablet", "Metformin", null, false, null, "DiabetesCare", null, 4.0m, null, 300, "500mg", null },
+                    { "7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v", null, 6, null, new DateTime(2025, 10, 30, 23, 30, 36, 209, DateTimeKind.Utc).AddTicks(4956), null, null, "Tablet", "Losartan", null, false, null, "HeartHealth", null, 3.5m, null, 250, "50mg", null },
+                    { "8h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w", null, 9, null, new DateTime(2025, 10, 30, 23, 30, 36, 209, DateTimeKind.Utc).AddTicks(4960), null, null, "Capsule", "Omeprazole", null, false, null, "DigestiveCare", null, 2.0m, null, 400, "20mg", null },
+                    { "9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x", null, 10, null, new DateTime(2025, 10, 30, 23, 30, 36, 209, DateTimeKind.Utc).AddTicks(4964), null, null, "Inhaler", "Salbutamol", null, false, null, "BreathEasy", null, 10.0m, null, 120, "100mcg", null }
+                });
+
+            migrationBuilder.InsertData(
+                table: "PromptTemplates",
+                columns: new[] { "PromptTemplateId", "Content", "CreatedAt", "DeletedOn", "Description", "IsDeleted", "Name", "Type", "UpdatedAt" },
+                values: new object[] { "c9b42596-ebb7-4460-a4fd-18feba292546", "    You are a responsible and helpful AI medical assistant for a Smart Clinical System.\r\n    Your role:\r\n    - Analyze the user's symptoms.\r\n    - Recommend the most appropriate medicines ONLY from the provided list (with their IDs).\r\n    - Provide a short and friendly advice section for the patient.\r\n\r\n    Follow these rules:\r\n    1. Never invent new medicines or diseases.\r\n    2. Choose only from the provided list.\r\n    3. Always respond **strictly in JSON** format using this structure:\r\n\r\n    {\r\n      \"possibleConditions\": \"string — short description of likely common conditions\",\r\n      \"recommendedMedicineIds\": [\"9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x\", \"0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y\"],\r\n      \"advice\": \"string — short patient-friendly advice\"\r\n    }\r\n\r\n    Example response:\r\n\r\n    {\r\n      \"possibleConditions\": \"Common cold or influenza\",\r\n      \"recommendedMedicineIds\": [\"9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x\", \"0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y\"],\r\n      \"advice\": \"Stay hydrated, rest, and take paracetamol for fever. Consult a doctor if symptoms persist more than 3 days.\"\r\n    }\r\n\r\n    Do not include any text, explanation, or markdown outside the JSON block.", new DateTime(2025, 10, 31, 1, 30, 36, 297, DateTimeKind.Local).AddTicks(9077), null, "Analyzes user symptoms and recommends possible conditions and medicines from the available list.", false, "Default Diagnose Prompt", 1, null });
+
+            migrationBuilder.InsertData(
+                table: "AspNetUserRoles",
+                columns: new[] { "RoleId", "UserId" },
+                values: new object[,]
+                {
+                    { "656a6079-ec9a-4a98-a484-2d1752156d60", "27d78708-8671-4b05-bd5e-17aa91392224" },
+                    { "4f8554d2-cfaa-44b5-90ce-e883c804ae90", "f8472c89-f48d-49cc-8517-a81153d47cdd" }
                 });
 
             migrationBuilder.CreateIndex(
@@ -298,6 +342,9 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
 
             migrationBuilder.DropTable(
                 name: "Medicines");
+
+            migrationBuilder.DropTable(
+                name: "PromptTemplates");
 
             migrationBuilder.DropTable(
                 name: "RefreshTokens");

@@ -5,9 +5,12 @@ using MapsterMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using OpenAI;
 using SmartClinicalSystem.API.Exceptions.Handler;
 using SmartClinicalSystem.API.Mapping;
+using SmartClinicalSystem.Core.Configs;
 using SmartClinicalSystem.Core.Contracts;
 using SmartClinicalSystem.Core.Queries.Medicines;
 using SmartClinicalSystem.Core.Services;
@@ -62,8 +65,10 @@ namespace Microsoft.Extensions.DependencyInjection
                 });
             });
 
+            
 
             services.AddScoped<IJwtService, JwtService>();
+            services.AddScoped<ISmartService, SmartService>();
 
             return services;
         }
@@ -79,6 +84,16 @@ namespace Microsoft.Extensions.DependencyInjection
                 cfg.RegisterServicesFromAssembly(typeof(GetMedicineByIdQueryHandler).Assembly);
                 cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
                 cfg.AddOpenBehavior(typeof(LoggingBehaviour<,>));
+            });
+
+            // Bind OpenAI config
+            services.Configure<OpenAiOptions>(config.GetSection("OpenAI"));
+
+            // Register OpenAI client
+            services.AddSingleton(sp =>
+            {
+                var options = sp.GetRequiredService<IOptions<OpenAiOptions>>().Value;
+                return new OpenAIClient(options.ApiKey);
             });
 
             services.AddScoped<IRepository, Repository>();

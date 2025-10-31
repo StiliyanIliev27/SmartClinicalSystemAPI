@@ -23,7 +23,7 @@ namespace SmartClinicalSystem.Core.Commands.Medicines
             return new UpdateMedicineResult(medicine);
         }
 
-        private Task UpdateMedicineAsync(Medicine medicine, UpdateMedicineDTO updateMedicineDTO)
+        private static Task UpdateMedicineAsync(Medicine medicine, UpdateMedicineDTO updateMedicineDTO)
         {
             medicine.GenericName = updateMedicineDTO.GenericName;
             medicine.StockQuantity = updateMedicineDTO.StockQuantity;
