@@ -14,6 +14,7 @@ namespace SmartClinicalSystem.Infrastructure.Data
         public DbSet<Medicine> Medicines { get; set; } = null!;
         public DbSet<ApplicationUser> ApplicationUsers { get; set; } = null!;
         public DbSet<PromptTemplate> PromptTemplates { get; set; } = null!;
+        public DbSet<AiConsultation> AiConsultations { get; set; } = null!;
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

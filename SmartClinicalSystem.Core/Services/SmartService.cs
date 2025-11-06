@@ -4,6 +4,7 @@ using OpenAI;
 using OpenAI.Chat;
 using SmartClinicalSystem.Core.Configs;
 using SmartClinicalSystem.Core.Contracts;
+using SmartClinicalSystem.Core.DTOs.Medicine;
 using SmartClinicalSystem.Core.Helpers;
 using SmartClinicalSystem.Core.Queries.AI;
 using SmartClinicalSystem.Infrastructure.Data.Enums;
@@ -42,12 +43,14 @@ namespace SmartClinicalSystem.Core.Services
                     m.Indications,
                     m.SideEffects,
                     m.Precautions,
-                    m.Price
+                    m.Price,
+                    m.AiSummary,
+                    m.Contraindications
                 })
                 .ToListAsync();
 
             if (!medicines.Any())
-                return new DiagnoseResultDto("No medicines available.", Enumerable.Empty<Medicine>(), "No medicines are currently in stock.");
+                return new DiagnoseResultDto("No medicines available.", Enumerable.Empty<GetMedicinesAiConsultationDTO>(), "No medicines are currently in stock.");
 
             // Build a structured medicine context string for the AI
             var medicineList = string.Join("\n", medicines.Select(m =>
@@ -116,16 +119,16 @@ namespace SmartClinicalSystem.Core.Services
             }
 
             if (aiResult == null)
-                return new DiagnoseResultDto("Unable to parse AI response.", Enumerable.Empty<Medicine>(), content);
+                return new DiagnoseResultDto("Unable to parse AI response.", Enumerable.Empty<GetMedicinesAiConsultationDTO>(), content);
 
             // Match recommended medicine IDs to your database list
             var recommendedMeds = medicines
                 .Where(m => aiResult.RecommendedMedicineIds.Contains(m.MedicineId))
-                .Select(m => new Medicine
+                .Select(m => new GetMedicinesAiConsultationDTO()
                 {
                     MedicineId = m.MedicineId,
                     GenericName = m.GenericName,
-                    Category = m.Category,
+                    Category = m.Category.ToString(),
                     DosageForm = m.DosageForm,
                     Strength = m.Strength,
                     Manufacturer = m.Manufacturer,
@@ -133,7 +136,9 @@ namespace SmartClinicalSystem.Core.Services
                     Indications = m.Indications,
                     SideEffects = m.SideEffects,
                     Precautions = m.Precautions,
-                    Price = m.Price
+                    Price = m.Price,
+                    AiSummary = m.AiSummary,
+                    Contraindications = m.Contraindications
                 })
                 .ToList();
 

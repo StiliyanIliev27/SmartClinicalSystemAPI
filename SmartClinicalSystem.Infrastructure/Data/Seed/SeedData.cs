@@ -27,6 +27,8 @@ namespace SmartClinicalSystem.Infrastructure.Data.Seed
              var adminUser = new ApplicationUser
              {
                  Id = "27d78708-8671-4b05-bd5e-17aa91392224",
+                 UserName = "admin_adminov",
+                 NormalizedUserName = "admin_adminov".ToUpper(),
                  Email = "admin@admin.com",
                  EmailConfirmed = true,
                  NormalizedEmail = "admin@admin.com".ToUpper(),
@@ -36,6 +38,8 @@ namespace SmartClinicalSystem.Infrastructure.Data.Seed
              var user = new ApplicationUser
              {
                  Id = "f8472c89-f48d-49cc-8517-a81153d47cdd",
+                 UserName = "user_userov",
+                 NormalizedUserName = "user_userov".ToUpper(),
                  Email = "user@user.com",
                  EmailConfirmed = true,
                  NormalizedEmail = "user@user.com".ToUpper(),
