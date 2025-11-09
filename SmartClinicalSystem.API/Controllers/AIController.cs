@@ -15,8 +15,7 @@ namespace SmartClinicalSystem.API.Controllers
         [HttpPost("diagnose")]
         public async Task<IActionResult> Diagnose([FromBody]DiagnoseRequest request)
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            var result = await mediator.Send(new GetDiagnoseQuery(request.Symptoms, userId!));
+            var result = await mediator.Send(new GetDiagnoseQuery(request.Symptoms, User.GetUserId()));
             return Ok(result);
         }
     }

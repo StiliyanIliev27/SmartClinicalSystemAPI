@@ -4,6 +4,7 @@ using OpenAI;
 using OpenAI.Chat;
 using SmartClinicalSystem.Core.Configs;
 using SmartClinicalSystem.Core.Contracts;
+using SmartClinicalSystem.Core.DTOs.Doctor;
 using SmartClinicalSystem.Core.DTOs.Medicine;
 using SmartClinicalSystem.Core.Helpers;
 using SmartClinicalSystem.Core.Queries.AI;
@@ -72,17 +73,7 @@ namespace SmartClinicalSystem.Core.Services
                 .OrderByDescending(p => p.CreatedAt)
                 .FirstOrDefaultAsync();
 
-            var systemPrompt = promptTemplate?.Content ?? 
-            """
-                You are a medical assistant AI for a Smart Medical System.
-                Choose medicines ONLY from the provided list, using their IDs.
-                Respond strictly in JSON format:
-                {
-                    "possibleConditions": "string",
-                    "recommendedMedicineIds": ["id1","id2"],
-                    "advice": "string"
-                }
-            """;
+            var systemPrompt = promptTemplate!.Content;
 
             // Prepare the chat client and messages
             var chatClient = client.GetChatClient(model); // model injected from config
@@ -111,9 +102,11 @@ namespace SmartClinicalSystem.Core.Services
             {
                 var jsonStart = content.IndexOf('{');
                 var jsonEnd = content.LastIndexOf('}');
+
                 if (jsonStart >= 0 && jsonEnd > jsonStart)
                 {
                     var json = content.Substring(jsonStart, jsonEnd - jsonStart + 1);
+                    json = json.Replace("`", "").Replace("'", "\"").Trim();
                     aiResult = JsonSerializer.Deserialize<AiDiagnosisIntermediate>(json, options);
                 }
             }
@@ -148,6 +141,114 @@ namespace SmartClinicalSystem.Core.Services
                 recommendedMeds,
                 aiResult.Advice
             );
+        }
+
+        public async Task<DiagnosisForMedicalReceiptDto?> GetDiagnosisForMedicalReceiptAsync(MedicalReceipt medicalReceipt)
+        {
+            var medicineIds = medicalReceipt.MedicalReceiptsMedicines.Select(rm => rm.MedicineId).Distinct().ToList();
+
+            var medicines = await repository
+                .AllReadOnly<Medicine>()
+                .Where(m => !m.IsDeleted && medicineIds.Contains(m.MedicineId))
+                .Select(m => new
+                {
+                    m.MedicineId,
+                    m.GenericName,
+                    m.Category,
+                    m.DosageForm,
+                    m.Strength,
+                    m.Manufacturer,
+                    m.Description,
+                    m.Indications,
+                    m.SideEffects,
+                    m.Precautions,
+                    m.Contraindications
+                })
+                .ToListAsync();
+
+                if (!medicines.Any())
+                    return new DiagnosisForMedicalReceiptDto()
+                    {
+                        AiDiagnosis = "No valid medicines found for this receipt.",
+                        AiAdvice = "Ensure medicines are correctly linked before AI analysis."
+                    };
+
+
+            var medicineList = string.Join("\n", medicines.Select(m =>
+            $"""
+                - ID: {m.MedicineId}
+                  Name: {m.GenericName}
+                  Category: {m.Category}
+                  Form: {m.DosageForm}
+                  Strength: {m.Strength}
+                  Indications: {m.Indications}
+                  SideEffects: {m.SideEffects}
+                  Precautions: {m.Precautions}
+                  Contraindications: {m.Contraindications}
+            """));
+
+            var promptTemplate = await repository
+                .AllReadOnly<PromptTemplate>()
+                .Where(p => p.Type == PromptTemplateType.ReceiptAnalysis && !p.IsDeleted)
+                .OrderByDescending(p => p.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            var systemPrompt = promptTemplate!.Content;
+
+            var chatClient = client.GetChatClient(model);
+
+            var userMessage = 
+            $"""
+                Doctor's diagnosis: {medicalReceipt.Diagnosis}
+                Doctor's advice: {medicalReceipt.Advice}
+
+                Prescribed medicines:
+                {medicineList}
+            """;
+
+            var messages = new List<ChatMessage>
+            {
+                ChatMessage.CreateSystemMessage(systemPrompt),
+                ChatMessage.CreateUserMessage(userMessage)
+            };
+
+            var response = await chatClient.CompleteChatAsync(messages);
+            var content = response.Value.Content?[0].Text;
+
+            if (string.IsNullOrWhiteSpace(content))
+                return null;
+
+            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            DiagnosisForMedicalReceiptDto? aiResult = null;
+
+            try
+            {
+                aiResult = JsonSerializer.Deserialize<DiagnosisForMedicalReceiptDto>(content, jsonOptions);
+            }
+            catch (JsonException)
+            {
+                // Clean AI output in case it includes markdown, quotes, or extra text
+                var jsonStart = content.IndexOf('{');
+                var jsonEnd = content.LastIndexOf('}');
+
+                if (jsonStart >= 0 && jsonEnd > jsonStart)
+                {
+                    var json = content.Substring(jsonStart, jsonEnd - jsonStart + 1);
+                    json = json.Replace("`", "").Replace("'", "\"").Trim(); 
+                    aiResult = JsonSerializer.Deserialize<DiagnosisForMedicalReceiptDto>(json, jsonOptions);
+                }
+            }
+
+            if (aiResult == null)
+            {
+                return new DiagnosisForMedicalReceiptDto
+                {
+                    AiDiagnosis = "Unable to parse AI output.",
+                    AiAdvice = content ?? "No response."
+                };
+            }
+
+            return aiResult;
         }
     }
 }

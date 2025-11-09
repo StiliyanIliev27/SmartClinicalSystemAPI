@@ -16,9 +16,9 @@ namespace SmartClinicalSystem.Core.Queries.AI
     public record GetDiagnoseResult(DiagnoseResultDto? Result);
     public class GetDiagnoseQueryHandler(ISmartService smartService, IRepository repository) : IQueryHandler<GetDiagnoseQuery, GetDiagnoseResult>
     {
-        public async Task<GetDiagnoseResult> Handle(GetDiagnoseQuery request, CancellationToken cancellationToken)
+        public async Task<GetDiagnoseResult> Handle(GetDiagnoseQuery query, CancellationToken cancellationToken)
         {
-            var result = await smartService.GetDiagnosisAsync(request.Symptoms);
+            var result = await smartService.GetDiagnosisAsync(query.Symptoms);
             
             if(result == null)
             {
@@ -29,8 +29,8 @@ namespace SmartClinicalSystem.Core.Queries.AI
             {
                 AiResponseJson = JsonSerializer.Serialize(result),
                 Category = ConsultationCategory.Diagnosis,
-                UserId = request.UserId,
-                Symptoms = request.Symptoms
+                UserId = query.UserId,
+                Symptoms = query.Symptoms
             };
 
             await repository.AddAsync(consulation);
