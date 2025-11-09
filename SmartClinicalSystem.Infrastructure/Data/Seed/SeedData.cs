@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using SmartClinicalSystem.Infrastructure.Common;
 using SmartClinicalSystem.Infrastructure.Data.Enums;
 using SmartClinicalSystem.Infrastructure.Data.Models;
 
@@ -13,12 +14,15 @@ namespace SmartClinicalSystem.Infrastructure.Data.Seed
             SeedUserRoles();
             SeedMedicines();
             SeedPromptTemplates();
+            SeedMedicalReceipts();
         }
         public List<ApplicationUser> Users { get; set; } = new List<ApplicationUser>();
         public ICollection<IdentityRole> Roles { get; set; } = new HashSet<IdentityRole>();
         public ICollection<IdentityUserRole<string>> UsersRoles { get; set; } = new HashSet<IdentityUserRole<string>>();
         public List<Medicine> Medicines { get; set; } = new List<Medicine>();
         public List<PromptTemplate> PromptTemplates { get; set; } = new List<PromptTemplate>();
+        public List<MedicalReceipt> MedicalReceipts { get; set; } = new List<MedicalReceipt>();
+        public List<MedicalReceiptMedicine> MedicalReceiptMedicines { get; set; } = new List<MedicalReceiptMedicine>();
 
         public void SeedUsers()
         {
@@ -46,14 +50,27 @@ namespace SmartClinicalSystem.Infrastructure.Data.Seed
                  PasswordHash = hasher.HashPassword(null!, "user123")
              };
 
+            var doctor = new ApplicationUser
+            {
+                Id = "bc0c48b7-5cb9-4d8f-802b-68bea5bf4780",
+                UserName = "doctor_doctorov",
+                NormalizedUserName = "doctor_doctorov".ToUpper(),
+                Email = "doctor@doctor.com",
+                EmailConfirmed = true,
+                NormalizedEmail = "doctor@doctor.com".ToUpper(),
+                PasswordHash = hasher.HashPassword(null!, "doctor123")
+            };
+
             Users.Add(user);
             Users.Add(adminUser);
+            Users.Add(doctor);
         }
 
         public void SeedRoles()
         {
             var userRoleId = "4f8554d2-cfaa-44b5-90ce-e883c804ae90";
             var adminRoleId = "656a6079-ec9a-4a98-a484-2d1752156d60";
+            var doctorRoleId = "50622ab4-fb1c-41b3-87f0-a225bd75e2a6";
 
             // Seed the roles in the Database if they do not exist
             Roles.Add(new IdentityRole
@@ -70,6 +87,13 @@ namespace SmartClinicalSystem.Infrastructure.Data.Seed
                 Name = "Admin",
                 NormalizedName = "ADMIN",
             });
+            Roles.Add(new IdentityRole
+            {
+                Id = doctorRoleId,
+                ConcurrencyStamp = doctorRoleId,
+                Name = "Doctor",
+                NormalizedName = "DOCTOR",
+            });
         }
         
         private void SeedUserRoles()
@@ -83,6 +107,16 @@ namespace SmartClinicalSystem.Infrastructure.Data.Seed
             {
                 UserId = "27d78708-8671-4b05-bd5e-17aa91392224",
                 RoleId = "656a6079-ec9a-4a98-a484-2d1752156d60"
+            });
+            UsersRoles.Add(new IdentityUserRole<string> // Admin User with Doctor Role
+            {
+                UserId = "27d78708-8671-4b05-bd5e-17aa91392224",
+                RoleId = "50622ab4-fb1c-41b3-87f0-a225bd75e2a6"
+            });
+            UsersRoles.Add(new IdentityUserRole<string> // Doctor User Role
+            {
+                UserId = "bc0c48b7-5cb9-4d8f-802b-68bea5bf4780",
+                RoleId = "50622ab4-fb1c-41b3-87f0-a225bd75e2a6"
             });
         }
 
@@ -212,7 +246,7 @@ namespace SmartClinicalSystem.Infrastructure.Data.Seed
 
         private void SeedPromptTemplates()
         {
-            PromptTemplates.Add(new PromptTemplate
+            PromptTemplates.Add(new PromptTemplate()
             {
                 Name = "Default Diagnose Prompt",
                 Description = "Analyzes user symptoms and recommends possible conditions and medicines from the available list.",
@@ -249,6 +283,104 @@ namespace SmartClinicalSystem.Infrastructure.Data.Seed
                 CreatedAt = DateTime.Now,
                 IsDeleted = false
             });
+            PromptTemplates.Add(new PromptTemplate
+            {
+                Name = "Default Receipt Review Prompt",
+                Description = "Validates a doctor's medical receipt and generates AI-based diagnosis & advice.",
+                Type = PromptTemplateType.ReceiptAnalysis,
+                Content =
+                """
+                    You are a senior clinical AI assistant reviewing a doctor's medical receipt.
+
+                    ### Your Goals
+                    1. Evaluate the doctor's diagnosis for completeness and clarity.
+                    2. Refine or expand it into a more detailed but concise medical explanation.
+                    3. Ensure the prescribed medicines are appropriate for the diagnosis.
+                    4. Write patient-friendly advice that complements the doctor's notes — not just repeats them.
+
+                    ### Your Response
+                    Respond strictly in **JSON** format:
+                    {
+                      "aiDiagnosis": "Refined, detailed diagnosis in clinical terms (do not copy doctor's text verbatim)",
+                      "aiAdvice": "Expanded advice with lifestyle or follow-up recommendations (friendly and medically sound)"
+                    }
+
+                    Avoid repeating the doctor's text; instead, validate and *enhance* it.
+                    Keep responses short (2–3 sentences per field).         
+                """,
+                CreatedAt = DateTime.UtcNow
+            });
+
         }
+
+        private void SeedMedicalReceipts()
+        {
+            MedicalReceipts.AddRange(new[]
+            {
+                new MedicalReceipt
+                {
+                    MedicalReceiptId = "rec-1",
+                    DoctorId = "bc0c48b7-5cb9-4d8f-802b-68bea5bf4780",
+                    PatientId = "f8472c89-f48d-49cc-8517-a81153d47cdd",
+                    Diagnosis = "Viral Pharyngitis",
+                    Advice = "Take rest and drink fluids.",
+                    AiDiagnosis = "Possible viral infection",
+                    AiAdvice = "Increase hydration and rest.",
+                    IssueDate = DateTime.Now,
+                    ExpirationDate = DateTime.Now.AddDays(7),
+                    CreatedAt = DateTime.Now    ,
+                    IsDeleted = false
+                },
+                new MedicalReceipt
+                {
+                    MedicalReceiptId = "rec-2",
+                    DoctorId = "bc0c48b7-5cb9-4d8f-802b-68bea5bf4780",
+                    PatientId = "f8472c89-f48d-49cc-8517-a81153d47cdd",
+                    Diagnosis = "Bacterial Tonsillitis",
+                    Advice = "Complete the antibiotic course.",
+                    AiDiagnosis = "Possible bacterial tonsillitis",
+                    AiAdvice = "Avoid spicy foods.",
+                    IssueDate = DateTime.Now,
+                    ExpirationDate = DateTime.Now.AddDays(10),
+                    CreatedAt = DateTime.Now,
+                    IsDeleted = false
+                }
+            });
+        }
+
+        private void SeedMedicalReceiptMedicines()
+        {
+            MedicalReceiptMedicines.AddRange(new[]
+            {
+                new MedicalReceiptMedicine
+                {
+                    ReceiptMedicineId = "rm-1",
+                    MedicalReceiptId = "rec-1",
+                    MedicineId = "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
+                    Quantity = 10,
+                    DosageInstructions = "1 tablet twice daily after meals",
+                    DurationDays = 5
+                },
+                new MedicalReceiptMedicine
+                {
+                    ReceiptMedicineId = "rm-2",
+                    MedicalReceiptId = "rec-1",
+                    MedicineId = "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q",
+                    Quantity = 14,
+                    DosageInstructions = "1 capsule every 8 hours",
+                    DurationDays = 7
+                },
+                new MedicalReceiptMedicine
+                {
+                    ReceiptMedicineId = "rm-3",
+                    MedicalReceiptId = "rec-2",
+                    MedicineId = "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r",
+                    Quantity = 21,
+                    DosageInstructions = "1 capsule every 8 hours",
+                    DurationDays = 7
+                }
+            });
+        }
+
     }
 }

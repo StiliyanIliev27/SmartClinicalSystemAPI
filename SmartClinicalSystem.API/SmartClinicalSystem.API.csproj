@@ -25,6 +25,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BuildingBlock\BuildingBlock.csproj" />
+    <ProjectReference Include="..\SmartClinicalSystem.Common\SmartClinicalSystem.Common.csproj" />
     <ProjectReference Include="..\SmartClinicalSystem.Core\SmartClinicalSystem.Core.csproj" />
     <ProjectReference Include="..\SmartClinicalSystem.Infrastructure\SmartClinicalSystem.Infrastructure.csproj" />
   </ItemGroup>

@@ -4,6 +4,7 @@
     {
         Diagnose = 1,
         Summary = 2,
-        Chatbot = 3
+        Chatbot = 3,
+        ReceiptAnalysis = 4
     }
 }

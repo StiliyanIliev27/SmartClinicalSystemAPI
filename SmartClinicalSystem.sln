@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BuildingBlock", "BuildingBl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartClinicalSystem.API", "SmartClinicalSystem.API\SmartClinicalSystem.API.csproj", "{25A2AFD0-0824-405D-B3F0-CC6F26C8DC2A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartClinicalSystem.Infrastructure", "SmartClinicalSystem.Infrastructure\SmartClinicalSystem.Infrastructure.csproj", "{F6BBD9B1-1864-4E55-B7F4-071E4F97B055}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartClinicalSystem.Infrastructure", "SmartClinicalSystem.Infrastructure\SmartClinicalSystem.Infrastructure.csproj", "{F6BBD9B1-1864-4E55-B7F4-071E4F97B055}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartClinicalSystem.Core", "SmartClinicalSystem.Core\SmartClinicalSystem.Core.csproj", "{1E0688AB-8AA6-477A-9F4D-EB1DA1AA43C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SmartClinicalSystem.Core", "SmartClinicalSystem.Core\SmartClinicalSystem.Core.csproj", "{1E0688AB-8AA6-477A-9F4D-EB1DA1AA43C2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SmartClinicalSystem.Common", "SmartClinicalSystem.Common\SmartClinicalSystem.Common.csproj", "{090C45D2-F7E7-4BF6-8B83-D42A6DC8B1E0}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{1E0688AB-8AA6-477A-9F4D-EB1DA1AA43C2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E0688AB-8AA6-477A-9F4D-EB1DA1AA43C2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E0688AB-8AA6-477A-9F4D-EB1DA1AA43C2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{090C45D2-F7E7-4BF6-8B83-D42A6DC8B1E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{090C45D2-F7E7-4BF6-8B83-D42A6DC8B1E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{090C45D2-F7E7-4BF6-8B83-D42A6DC8B1E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{090C45D2-F7E7-4BF6-8B83-D42A6DC8B1E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
