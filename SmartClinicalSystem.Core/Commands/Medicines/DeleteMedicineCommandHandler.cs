@@ -1,6 +1,6 @@
 ﻿using BuildingBlock.BuildingBlocks.CQRS;
 using SmartClinicalSystem.Core.Contracts;
-using SmartClinicalSystem.Core.Exceptions;
+using SmartClinicalSystem.Core.Exceptions.NotFound;
 using SmartClinicalSystem.Infrastructure.Data.Models;
 
 namespace SmartClinicalSystem.Core.Commands.Medicines

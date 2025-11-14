@@ -25,10 +25,9 @@ namespace SmartClinicalSystem.Core.Queries.AI
                 return new GetDiagnoseResult(new DiagnoseResultDto("", null!, ""));
             }
 
-            var consulation = new AiConsultation()
+            var consulation = new AiDiagnosisConsultation()
             {
                 AiResponseJson = JsonSerializer.Serialize(result),
-                Category = ConsultationCategory.Diagnosis,
                 UserId = query.UserId,
                 Symptoms = query.Symptoms
             };

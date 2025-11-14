@@ -2,6 +2,8 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using SmartClinicalSystem.Core.Exceptions;
+using SmartClinicalSystem.Core.Exceptions.AlreadyExists;
+using SmartClinicalSystem.Core.Exceptions.Other;
 using SmartClinicalSystem.Infrastructure.Data.Models;
 namespace SmartClinicalSystem.Core.Commands.Auth
 {
