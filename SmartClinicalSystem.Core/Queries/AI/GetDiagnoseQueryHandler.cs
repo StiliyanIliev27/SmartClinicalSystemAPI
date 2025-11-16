@@ -9,7 +9,7 @@ namespace SmartClinicalSystem.Core.Queries.AI
 {
     public record DiagnoseResultDto(
         string PossibleConditions, 
-        IEnumerable<GetMedicinesAiConsultationDTO> RecommendedMedicines, 
+        IEnumerable<GetMedicinesAiConsultationDTO> RecommendedMedicines,
         string Advice
     );
     public record GetDiagnoseQuery(string Symptoms, string UserId) : IQuery<GetDiagnoseResult>;

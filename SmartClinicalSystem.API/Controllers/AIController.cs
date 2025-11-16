@@ -12,11 +12,24 @@ namespace SmartClinicalSystem.API.Controllers
     [Authorize]
     public class AIController(IMediator mediator) : ControllerBase
     {
-        [HttpPost("diagnose")]
+        [HttpGet("diagnose")]
         public async Task<IActionResult> Diagnose([FromBody]DiagnoseRequest request)
         {
             var result = await mediator.Send(new GetDiagnoseQuery(request.Symptoms, User.GetUserId()));
             return Ok(result);
+        }
+
+        [HttpGet("compare")]
+        public async Task<IActionResult> Compare([FromQuery]CompareRequest request)
+        {
+            var result = await mediator.Send(new GetCompareQuery(request.FirstMedicineId, request.SecondMedicineId, request.Diagnosis, User.GetUserId()));
+            return Ok(result);
+        }
+
+        [HttpGet("summary-check/{period}")]
+        public async Task<IActionResult> SummaryCheck([FromRoute]int period)
+        {
+            return Ok();
         }
     }
 }

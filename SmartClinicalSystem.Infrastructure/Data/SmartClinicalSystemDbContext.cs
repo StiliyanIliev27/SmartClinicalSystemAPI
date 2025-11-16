@@ -20,6 +20,7 @@ namespace SmartClinicalSystem.Infrastructure.Data
         public DbSet<RefreshToken> RefreshTokens { get; set; } = null!;
         public DbSet<MedicalReceipt> MedicalReceipts { get; set; } = null!;
         public DbSet<MedicalReceiptMedicine> MedicalReceiptsMedicines { get; set; } = null!;
+        public DbSet<UserHealthLog> UserHealthLogs { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new MedicinesConfiguration());
