@@ -1,6 +1,6 @@
 ﻿using BuildingBlock.BuildingBlocks.Exceptions;
 
-namespace SmartClinicalSystem.Core.Exceptions
+namespace SmartClinicalSystem.Core.Exceptions.AlreadyExists
 {
     public class UserAlreadyExistsException : BadRequestException
     {

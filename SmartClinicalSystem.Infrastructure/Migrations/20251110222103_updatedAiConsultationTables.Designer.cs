@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SmartClinicalSystem.Infrastructure.Data;
 
@@ -11,9 +12,11 @@ using SmartClinicalSystem.Infrastructure.Data;
 namespace SmartClinicalSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(SmartClinicalSystemDbContext))]
-    partial class SmartClinicalSystemDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251110222103_updatedAiConsultationTables")]
+    partial class updatedAiConsultationTables
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -361,15 +364,15 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             Id = "f8472c89-f48d-49cc-8517-a81153d47cdd",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "a41f9b84-267d-4e7a-b7a5-b648a42b454b",
+                            ConcurrencyStamp = "2724a605-60d7-400b-86da-c30ea3a98825",
                             Email = "user@user.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "USER@USER.COM",
                             NormalizedUserName = "USER_USEROV",
-                            PasswordHash = "AQAAAAIAAYagAAAAEMl2g0NHJZyzLJqNG8X3tK4ARkHD6t9k8aKwjXr0dAyvbb456rZtHWzOecCqJW8JXw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEFjo5c8rMM4RBfrfp5XO7qXiMgPoL4xCBIVmzXnXmNCL48yDXT+yXY9hpi2F+XA+yw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "37c47f43-8617-4e51-aca1-473ae7cbcbd1",
+                            SecurityStamp = "ec9b8494-18df-4823-b455-260f7c10583f",
                             TwoFactorEnabled = false,
                             UserName = "user_userov"
                         },
@@ -377,15 +380,15 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             Id = "27d78708-8671-4b05-bd5e-17aa91392224",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "0c345ac8-1d3b-4344-b6ae-917a9146905e",
+                            ConcurrencyStamp = "2ee527ae-bd3d-477b-a9bb-b19b0ae7513b",
                             Email = "admin@admin.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@ADMIN.COM",
                             NormalizedUserName = "ADMIN_ADMINOV",
-                            PasswordHash = "AQAAAAIAAYagAAAAEJRe1TJ7qO4qWwPAk0uiZE4UT5zFFHvQOjV3xR9v1x/dkXup6v6aAHrdv2yuuOT9nQ==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEBgujKGTneB6BLxGlKhZELudl/HUBXT9oEAkRepjZ28XHm1d4gOkX3yp+cOu0Pbrqw==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "e5a73a3e-e61f-4b53-b676-b74642190703",
+                            SecurityStamp = "5eeae18b-9481-47a0-9da7-f917b2db5731",
                             TwoFactorEnabled = false,
                             UserName = "admin_adminov"
                         },
@@ -393,15 +396,15 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             Id = "bc0c48b7-5cb9-4d8f-802b-68bea5bf4780",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "f9142bcb-3f54-49c4-8108-691efe3855ff",
+                            ConcurrencyStamp = "10d1cb23-bf74-4e3f-be2b-2e7c1b0006ac",
                             Email = "doctor@doctor.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "DOCTOR@DOCTOR.COM",
                             NormalizedUserName = "DOCTOR_DOCTOROV",
-                            PasswordHash = "AQAAAAIAAYagAAAAEGFPVipq4BzzW5pomczMvvYHEsPZex9ttucfACegcnE9GwKD807AbUlond6zvb+a1A==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEAjZqxnx4Z4zUVaZXTCYBiWuUu8b5F8VpGND8nK985SO61oQuHAv+X1QbMlHBhLxGg==",
                             PhoneNumberConfirmed = false,
-                            SecurityStamp = "f53c139f-40bc-42cf-b5d8-37c920dbbae9",
+                            SecurityStamp = "5f193c9e-b58f-4720-8b09-9daf1034ab07",
                             TwoFactorEnabled = false,
                             UserName = "doctor_doctorov"
                         });
@@ -466,12 +469,12 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                             Advice = "Take rest and drink fluids.",
                             AiAdvice = "Increase hydration and rest.",
                             AiDiagnosis = "Possible viral infection",
-                            CreatedAt = new DateTime(2025, 11, 16, 23, 34, 48, 563, DateTimeKind.Local).AddTicks(2600),
+                            CreatedAt = new DateTime(2025, 11, 11, 0, 21, 3, 23, DateTimeKind.Local).AddTicks(6059),
                             Diagnosis = "Viral Pharyngitis",
                             DoctorId = "bc0c48b7-5cb9-4d8f-802b-68bea5bf4780",
-                            ExpirationDate = new DateTime(2025, 11, 23, 23, 34, 48, 563, DateTimeKind.Local).AddTicks(2568),
+                            ExpirationDate = new DateTime(2025, 11, 18, 0, 21, 3, 23, DateTimeKind.Local).AddTicks(6039),
                             IsDeleted = false,
-                            IssueDate = new DateTime(2025, 11, 16, 23, 34, 48, 563, DateTimeKind.Local).AddTicks(2567),
+                            IssueDate = new DateTime(2025, 11, 11, 0, 21, 3, 23, DateTimeKind.Local).AddTicks(6036),
                             PatientId = "f8472c89-f48d-49cc-8517-a81153d47cdd"
                         },
                         new
@@ -480,12 +483,12 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                             Advice = "Complete the antibiotic course.",
                             AiAdvice = "Avoid spicy foods.",
                             AiDiagnosis = "Possible bacterial tonsillitis",
-                            CreatedAt = new DateTime(2025, 11, 16, 23, 34, 48, 563, DateTimeKind.Local).AddTicks(2610),
+                            CreatedAt = new DateTime(2025, 11, 11, 0, 21, 3, 23, DateTimeKind.Local).AddTicks(6069),
                             Diagnosis = "Bacterial Tonsillitis",
                             DoctorId = "bc0c48b7-5cb9-4d8f-802b-68bea5bf4780",
-                            ExpirationDate = new DateTime(2025, 11, 26, 23, 34, 48, 563, DateTimeKind.Local).AddTicks(2609),
+                            ExpirationDate = new DateTime(2025, 11, 21, 0, 21, 3, 23, DateTimeKind.Local).AddTicks(6067),
                             IsDeleted = false,
-                            IssueDate = new DateTime(2025, 11, 16, 23, 34, 48, 563, DateTimeKind.Local).AddTicks(2608),
+                            IssueDate = new DateTime(2025, 11, 11, 0, 21, 3, 23, DateTimeKind.Local).AddTicks(6066),
                             PatientId = "f8472c89-f48d-49cc-8517-a81153d47cdd"
                         });
                 });
@@ -593,7 +596,7 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             MedicineId = "1a2b3c4d-5e6f-7g8h-9i0j-1k2l3m4n5o6p",
                             Category = 1,
-                            CreatedAt = new DateTime(2025, 11, 16, 21, 34, 47, 769, DateTimeKind.Utc).AddTicks(6415),
+                            CreatedAt = new DateTime(2025, 11, 10, 22, 21, 2, 131, DateTimeKind.Utc).AddTicks(3999),
                             DosageForm = "Tablet",
                             GenericName = "Paracetamol",
                             IsDeleted = false,
@@ -606,7 +609,7 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             MedicineId = "2b3c4d5e-6f7g-8h9i-0j1k-2l3m4n5o6p7q",
                             Category = 1,
-                            CreatedAt = new DateTime(2025, 11, 16, 21, 34, 47, 769, DateTimeKind.Utc).AddTicks(6451),
+                            CreatedAt = new DateTime(2025, 11, 10, 22, 21, 2, 131, DateTimeKind.Utc).AddTicks(4196),
                             DosageForm = "Capsule",
                             GenericName = "Ibuprofen",
                             IsDeleted = false,
@@ -619,7 +622,7 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             MedicineId = "3c4d5e6f-7g8h-9i0j-1k2l-3m4n5o6p7q8r",
                             Category = 2,
-                            CreatedAt = new DateTime(2025, 11, 16, 21, 34, 47, 769, DateTimeKind.Utc).AddTicks(6454),
+                            CreatedAt = new DateTime(2025, 11, 10, 22, 21, 2, 131, DateTimeKind.Utc).AddTicks(4200),
                             DosageForm = "Capsule",
                             GenericName = "Amoxicillin",
                             IsDeleted = false,
@@ -632,7 +635,7 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             MedicineId = "4d5e6f7g-8h9i-0j1k-2l3m-4n5o6p7q8r9s",
                             Category = 3,
-                            CreatedAt = new DateTime(2025, 11, 16, 21, 34, 47, 769, DateTimeKind.Utc).AddTicks(6457),
+                            CreatedAt = new DateTime(2025, 11, 10, 22, 21, 2, 131, DateTimeKind.Utc).AddTicks(4203),
                             DosageForm = "Tablet",
                             GenericName = "Acyclovir",
                             IsDeleted = false,
@@ -645,7 +648,7 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             MedicineId = "5e6f7g8h-9i0j-1k2l-3m4n-5o6p7q8r9s0t",
                             Category = 4,
-                            CreatedAt = new DateTime(2025, 11, 16, 21, 34, 47, 769, DateTimeKind.Utc).AddTicks(6461),
+                            CreatedAt = new DateTime(2025, 11, 10, 22, 21, 2, 131, DateTimeKind.Utc).AddTicks(4206),
                             DosageForm = "Capsule",
                             GenericName = "Fluconazole",
                             IsDeleted = false,
@@ -658,7 +661,7 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             MedicineId = "6f7g8h9i-0j1k-2l3m-4n5o-6p7q8r9s0t1u",
                             Category = 7,
-                            CreatedAt = new DateTime(2025, 11, 16, 21, 34, 47, 769, DateTimeKind.Utc).AddTicks(6465),
+                            CreatedAt = new DateTime(2025, 11, 10, 22, 21, 2, 131, DateTimeKind.Utc).AddTicks(4213),
                             DosageForm = "Tablet",
                             GenericName = "Metformin",
                             IsDeleted = false,
@@ -671,7 +674,7 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             MedicineId = "7g8h9i0j-1k2l-3m4n-5o6p-7q8r9s0t1u2v",
                             Category = 6,
-                            CreatedAt = new DateTime(2025, 11, 16, 21, 34, 47, 769, DateTimeKind.Utc).AddTicks(6468),
+                            CreatedAt = new DateTime(2025, 11, 10, 22, 21, 2, 131, DateTimeKind.Utc).AddTicks(4216),
                             DosageForm = "Tablet",
                             GenericName = "Losartan",
                             IsDeleted = false,
@@ -684,7 +687,7 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             MedicineId = "8h9i0j1k-2l3m-4n5o-6p7q-8r9s0t1u2v3w",
                             Category = 9,
-                            CreatedAt = new DateTime(2025, 11, 16, 21, 34, 47, 769, DateTimeKind.Utc).AddTicks(6471),
+                            CreatedAt = new DateTime(2025, 11, 10, 22, 21, 2, 131, DateTimeKind.Utc).AddTicks(4219),
                             DosageForm = "Capsule",
                             GenericName = "Omeprazole",
                             IsDeleted = false,
@@ -697,7 +700,7 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             MedicineId = "9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x",
                             Category = 10,
-                            CreatedAt = new DateTime(2025, 11, 16, 21, 34, 47, 769, DateTimeKind.Utc).AddTicks(6473),
+                            CreatedAt = new DateTime(2025, 11, 10, 22, 21, 2, 131, DateTimeKind.Utc).AddTicks(4222),
                             DosageForm = "Inhaler",
                             GenericName = "Salbutamol",
                             IsDeleted = false,
@@ -710,7 +713,7 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         {
                             MedicineId = "0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y",
                             Category = 11,
-                            CreatedAt = new DateTime(2025, 11, 16, 21, 34, 47, 769, DateTimeKind.Utc).AddTicks(6499),
+                            CreatedAt = new DateTime(2025, 11, 10, 22, 21, 2, 131, DateTimeKind.Utc).AddTicks(4228),
                             DosageForm = "Tablet",
                             GenericName = "Cetirizine",
                             IsDeleted = false,
@@ -758,9 +761,9 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                     b.HasData(
                         new
                         {
-                            PromptTemplateId = "e6a43ad3-ca70-42bf-afbf-58529cfa309f",
+                            PromptTemplateId = "31dead47-a087-4041-a4d8-92bc6d0a5fa6",
                             Content = "    You are a responsible and helpful AI medical assistant for a Smart Clinical System.\r\n    Your role:\r\n    - Analyze the user's symptoms.\r\n    - Recommend the most appropriate medicines ONLY from the provided list (with their IDs).\r\n    - Provide a short and friendly advice section for the patient.\r\n\r\n    Follow these rules:\r\n    1. Never invent new medicines or diseases.\r\n    2. Choose only from the provided list.\r\n    3. Always respond **strictly in JSON** format using this structure:\r\n\r\n    {\r\n      \"possibleConditions\": \"string — short description of likely common conditions\",\r\n      \"recommendedMedicineIds\": [\"9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x\", \"0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y\"],\r\n      \"advice\": \"string — short patient-friendly advice\"\r\n    }\r\n\r\n    Example response:\r\n\r\n    {\r\n      \"possibleConditions\": \"Common cold or influenza\",\r\n      \"recommendedMedicineIds\": [\"9i0j1k2l-3m4n-5o6p-7q8r-9s0t1u2v3w4x\", \"0j1k2l3m-4n5o-6p7q-8r9s-0t1u2v3w4x5y\"],\r\n      \"advice\": \"Stay hydrated, rest, and take paracetamol for fever. Consult a doctor if symptoms persist more than 3 days.\"\r\n    }\r\n\r\n    Do not include any text, explanation, or markdown outside the JSON block.",
-                            CreatedAt = new DateTime(2025, 11, 16, 23, 34, 47, 923, DateTimeKind.Local).AddTicks(9639),
+                            CreatedAt = new DateTime(2025, 11, 11, 0, 21, 2, 313, DateTimeKind.Local).AddTicks(6302),
                             Description = "Analyzes user symptoms and recommends possible conditions and medicines from the available list.",
                             IsDeleted = false,
                             Name = "Default Diagnose Prompt",
@@ -768,31 +771,13 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                         },
                         new
                         {
-                            PromptTemplateId = "d9334538-0769-4053-8914-28cf40d5fec3",
+                            PromptTemplateId = "2db2cf7b-827b-4f38-ab0f-5eade07e9bcc",
                             Content = "    You are a senior clinical AI assistant reviewing a doctor's medical receipt.\r\n\r\n    ### Your Goals\r\n    1. Evaluate the doctor's diagnosis for completeness and clarity.\r\n    2. Refine or expand it into a more detailed but concise medical explanation.\r\n    3. Ensure the prescribed medicines are appropriate for the diagnosis.\r\n    4. Write patient-friendly advice that complements the doctor's notes — not just repeats them.\r\n\r\n    ### Your Response\r\n    Respond strictly in **JSON** format:\r\n    {\r\n      \"aiDiagnosis\": \"Refined, detailed diagnosis in clinical terms (do not copy doctor's text verbatim)\",\r\n      \"aiAdvice\": \"Expanded advice with lifestyle or follow-up recommendations (friendly and medically sound)\"\r\n    }\r\n\r\n    Avoid repeating the doctor's text; instead, validate and *enhance* it.\r\n    Keep responses short (2–3 sentences per field).         ",
-                            CreatedAt = new DateTime(2025, 11, 16, 21, 34, 47, 923, DateTimeKind.Utc).AddTicks(9652),
+                            CreatedAt = new DateTime(2025, 11, 10, 22, 21, 2, 313, DateTimeKind.Utc).AddTicks(6314),
                             Description = "Validates a doctor's medical receipt and generates AI-based diagnosis & advice.",
                             IsDeleted = false,
                             Name = "Default Receipt Review Prompt",
                             Type = 4
-                        },
-                        new
-                        {
-                            PromptTemplateId = "647d7aa8-a4b1-433c-81a3-49380c29d601",
-                            Content = "You are a professional medical AI system.\r\n\r\nCompare the two medicines based on how relevant they are for the given diagnosis.\r\n\r\nFor each medicine:\r\n- Analyze indications relevance\r\n- Match diagnosis keywords\r\n- Score relevance from 0 to 10\r\n- Provide matched keywords\r\n\r\nRespond STRICTLY in JSON using this structure:\r\n\r\n{\r\n    \"diagnosis\": \"string\",\r\n    \"a\": {\r\n        \"medicineId\": \"id1\",\r\n        \"matchScore\": 0,\r\n        \"matchingKeywords\": [\"word1\",\"word2\"]\r\n    },\r\n    \"b\": {\r\n        \"medicineId\": \"id2\",\r\n        \"matchScore\": 0,\r\n        \"matchingKeywords\": [\"word1\"]\r\n    },\r\n    \"betterMedicineId\": \"id1\",\r\n    \"explanation\": \"string\"\r\n}",
-                            CreatedAt = new DateTime(2025, 11, 16, 23, 34, 47, 923, DateTimeKind.Local).AddTicks(9653),
-                            IsDeleted = false,
-                            Name = "Medicine Comparison Prompt",
-                            Type = 5
-                        },
-                        new
-                        {
-                            PromptTemplateId = "0559967f-9094-4d7b-8a41-d5b1fb0d4d67",
-                            Content = "You are a professional AI health assistant working in a Smart Clinical System.\r\n\r\nYour task:\r\nAnalyze the user's medical receipts AND personal health logs for the given time period.\r\nConsider:\r\n- Reported symptoms\r\n- Pain levels\r\n- Mood logs\r\n- Temperatures\r\n- Notes written by the user\r\n- Side effects\r\n- Medications prescribed in the receipts\r\n- Consistency or worsening of symptoms\r\n\r\nYour goal:\r\nProduce a clear, friendly, medically helpful health summary (4–6 sentences).\r\nDo NOT diagnose new illnesses. Base everything STRICTLY on the provided data.\r\n\r\nRespond STRICTLY in JSON using the following structure:\r\n\r\n{\r\n    \"timePeriodDays\": number,\r\n    \"summary\": \"string (4–6 sentences summarizing health trends)\",\r\n    \"keyConcerns\": [\"string\", \"string\"],\r\n    \"positiveTrends\": [\"string\", \"string\"],\r\n    \"recommendedActions\": [\"string\", \"string\"]\r\n}\r\n\r\nRules:\r\n- No markdown\r\n- No extra text outside JSON\r\n- No invented data\r\n- Summaries must directly refer to the provided logs and receipts",
-                            CreatedAt = new DateTime(2025, 11, 16, 23, 34, 47, 923, DateTimeKind.Local).AddTicks(9655),
-                            IsDeleted = false,
-                            Name = "Health Summary Check Prompt",
-                            Type = 2
                         });
                 });
 
@@ -824,46 +809,6 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("RefreshTokens");
-                });
-
-            modelBuilder.Entity("SmartClinicalSystem.Infrastructure.Data.Models.UserHealthLog", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Mood")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Notes")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("PainLevel")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SideEffects")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Symptoms")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<double?>("Temperature")
-                        .HasColumnType("float");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserHealthLogs");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -975,17 +920,6 @@ namespace SmartClinicalSystem.Infrastructure.Migrations
                 });
 
             modelBuilder.Entity("SmartClinicalSystem.Infrastructure.Data.Models.RefreshToken", b =>
-                {
-                    b.HasOne("SmartClinicalSystem.Infrastructure.Data.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SmartClinicalSystem.Infrastructure.Data.Models.UserHealthLog", b =>
                 {
                     b.HasOne("SmartClinicalSystem.Infrastructure.Data.Models.ApplicationUser", "User")
                         .WithMany()

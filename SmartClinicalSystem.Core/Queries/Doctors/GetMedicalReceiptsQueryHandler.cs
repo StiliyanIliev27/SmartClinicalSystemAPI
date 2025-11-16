@@ -1,6 +1,7 @@
 ﻿using BuildingBlock.BuildingBlocks.CQRS;
 using Microsoft.EntityFrameworkCore;
 using SmartClinicalSystem.Core.Contracts;
+using SmartClinicalSystem.Core.DTOs.Doctor;
 using SmartClinicalSystem.Infrastructure.Data.Models;
 
 namespace SmartClinicalSystem.Core.Queries.Doctors
@@ -10,7 +11,7 @@ namespace SmartClinicalSystem.Core.Queries.Doctors
         int? PageSize = 10, 
         string? PatientId = "",
         string? DoctorId = "") : IQuery<GetMedicalReceiptsResult>;
-    public record GetMedicalReceiptsResult(IEnumerable<MedicalReceipt> Result);
+    public record GetMedicalReceiptsResult(IEnumerable<GetMedicalReceiptResultDto> Result);
     public class GetMedicalReceiptsQueryHandler(IRepository repository) : IQueryHandler<GetMedicalReceiptsQuery, GetMedicalReceiptsResult>
     {
         public async Task<GetMedicalReceiptsResult> Handle(GetMedicalReceiptsQuery query, CancellationToken cancellationToken)
@@ -18,7 +19,10 @@ namespace SmartClinicalSystem.Core.Queries.Doctors
             var pageNumber = query.PageNumber ?? 1;
             var pageSize = query.PageSize ?? 10;
 
-            var medicalReceipts = await repository.All<MedicalReceipt>().ToListAsync(cancellationToken: cancellationToken);
+            var medicalReceipts = await repository.AllReadOnly<MedicalReceipt>()
+                .Include(mr => mr.MedicalReceiptsMedicines)
+                .ThenInclude(mr => mr.Medicine)
+                .ToListAsync(cancellationToken: cancellationToken);
 
             if (!string.IsNullOrEmpty(query.PatientId))
             {
@@ -39,7 +43,29 @@ namespace SmartClinicalSystem.Core.Queries.Doctors
                 .Take(pageSize)
                 .ToList();
 
-            return new GetMedicalReceiptsResult(medicalReceipts);
+            var result = medicalReceipts.Select(mr => new GetMedicalReceiptResultDto()
+            {
+                MedicalReceiptId = mr.MedicalReceiptId,
+                DoctorId = mr.DoctorId,
+                PatientId = mr.PatientId,
+                Diagnosis = mr.Diagnosis,
+                Advice = mr.Advice,
+                IssueDate = mr.IssueDate,
+                ExpirationDate = mr.ExpirationDate,
+                AiDiagnosis = mr.AiDiagnosis,
+                AiAdvice = mr.AiAdvice,
+                MedicalReceiptsMedicines = mr.MedicalReceiptsMedicines.Select(rm => new GetMedicalReceiptMedicineDto
+                {
+                    MedicineId = rm.MedicineId,
+                    GenericName = rm.Medicine.GenericName,
+                    Quantity = rm.Quantity,
+                    DurationDays = rm.DurationDays,
+                    DosageInstructions = rm.DosageInstructions
+                }).ToList()
+            })
+            .ToList();
+
+            return new GetMedicalReceiptsResult(result);
         }
     }
 }

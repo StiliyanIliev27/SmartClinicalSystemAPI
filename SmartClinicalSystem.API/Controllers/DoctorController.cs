@@ -64,9 +64,10 @@ namespace SmartClinicalSystem.API.Controllers
         }
 
         [HttpPut("medical-receipt")]
-        public async Task<IActionResult> UpdateMedicalReceipt()
+        public async Task<IActionResult> UpdateMedicalReceipt([FromBody] UpdateMedicalReceiptRequest request)
         {
-            return Ok(new { message = "Medical receipt updated successfully." });
+            var result = await mediator.Send(new UpdateMedicalReceiptCommand(request.updateMedicalReceiptDto));
+            return Ok(result);
         }
     }
 }

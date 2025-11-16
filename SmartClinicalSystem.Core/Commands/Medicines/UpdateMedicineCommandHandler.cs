@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartClinicalSystem.Core.Contracts;
 using SmartClinicalSystem.Core.DTOs.Medicine;
 using SmartClinicalSystem.Core.Exceptions;
+using SmartClinicalSystem.Core.Exceptions.NotFound;
 using SmartClinicalSystem.Infrastructure.Data.Models;
 
 namespace SmartClinicalSystem.Core.Commands.Medicines

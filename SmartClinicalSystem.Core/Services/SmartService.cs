@@ -4,7 +4,7 @@ using OpenAI;
 using OpenAI.Chat;
 using SmartClinicalSystem.Core.Configs;
 using SmartClinicalSystem.Core.Contracts;
-using SmartClinicalSystem.Core.DTOs.Doctor;
+using SmartClinicalSystem.Core.DTOs.AI;
 using SmartClinicalSystem.Core.DTOs.Medicine;
 using SmartClinicalSystem.Core.Helpers;
 using SmartClinicalSystem.Core.Queries.AI;
@@ -26,6 +26,120 @@ namespace SmartClinicalSystem.Core.Services
             this.repository = repository;
             model = options.Value.Model;
         }
+
+        public async Task<MedicineComparisonDto> GenerateComparisonReport(string firstMedicineId, string secondMedicineId, string diagnosis)
+        {
+            // Load both medicines
+            var medicines = await repository
+                .AllReadOnly<Medicine>()
+                .Where(m => (m.MedicineId == firstMedicineId || m.MedicineId == secondMedicineId) && !m.IsDeleted)
+                .Select(m => new
+                {
+                    m.MedicineId,
+                    m.GenericName,
+                    m.Indications,
+                    m.Description,
+                    m.SideEffects,
+                    m.Precautions
+                })
+                .ToListAsync();
+
+            if (medicines.Count != 2)
+                throw new Exception("One or both medicines do not exist.");
+
+            var medA = medicines.First(m => m.MedicineId == firstMedicineId);
+            var medB = medicines.First(m => m.MedicineId == secondMedicineId);
+
+            // Fetch prompt template
+            var promptTemplate = await repository
+                .AllReadOnly<PromptTemplate>()
+                .Where(p => p.Type == PromptTemplateType.MedicineComparison && !p.IsDeleted)
+                .OrderByDescending(p => p.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            var systemPrompt = promptTemplate?.Content ?? throw new Exception("Comparison prompt template missing.");
+
+            // Build structured medicine info for GPT
+            string userMessage = $"""
+                Diagnosis: {diagnosis}
+
+                Medicine A:
+                - ID: {medA.MedicineId}
+                - Name: {medA.GenericName}
+                - Indications: {medA.Indications}
+                - Description: {medA.Description}
+                - SideEffects: {medA.SideEffects}
+                - Precautions: {medA.Precautions}
+
+                Medicine B:
+                - ID: {medB.MedicineId}
+                - Name: {medB.GenericName}
+                - Indications: {medB.Indications}
+                - Description: {medB.Description}
+                - SideEffects: {medB.SideEffects}
+                - Precautions: {medB.Precautions}
+            """;
+
+            // Build ChatGPT request
+            var chatClient = client.GetChatClient(model);
+            var messages = new List<ChatMessage>
+            {
+                ChatMessage.CreateSystemMessage(systemPrompt),
+                ChatMessage.CreateUserMessage(userMessage)
+            };
+
+            var response = await chatClient.CompleteChatAsync(messages);
+            var content = response.Value.Content?[0].Text;
+
+            if (string.IsNullOrWhiteSpace(content))
+                throw new Exception("AI returned empty response.");
+
+            // Parse JSON
+            var jsonOptions = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+            MedicineComparisonDto? ai;
+
+            try
+            {
+                ai = JsonSerializer.Deserialize<MedicineComparisonDto>(content, jsonOptions);
+            }
+            catch (JsonException)
+            {
+                var jsonStart = content.IndexOf('{');
+                var jsonEnd = content.LastIndexOf('}');
+                var json = content.Substring(jsonStart, jsonEnd - jsonStart + 1)
+                    .Replace("`", "")
+                    .Replace("'", "\"");
+
+                ai = JsonSerializer.Deserialize<MedicineComparisonDto>(json, jsonOptions);
+            }
+
+            if (ai == null)
+                throw new Exception("Failed to parse AI comparison JSON.");
+
+            // Map to DTO
+            return new MedicineComparisonDto
+            {
+                Diagnosis = diagnosis,
+                BetterMedicineId = ai.BetterMedicineId,
+                Explanation = ai.Explanation,
+
+                A = new ComparedMedicineDto
+                {
+                    MedicineId = medA.MedicineId,
+                    MatchScore = ai.A.MatchScore,
+                    MatchingKeywords = ai.A.MatchingKeywords,
+                },
+
+                B = new ComparedMedicineDto
+                {
+                    MedicineId = medB.MedicineId,
+                    MatchScore = ai.B.MatchScore,
+                    MatchingKeywords = ai.B.MatchingKeywords,
+                }
+            };
+        }
+
+
         public async Task<DiagnoseResultDto?> GetDiagnosisAsync(string symptoms)
         {
             // Load available medicines from DB

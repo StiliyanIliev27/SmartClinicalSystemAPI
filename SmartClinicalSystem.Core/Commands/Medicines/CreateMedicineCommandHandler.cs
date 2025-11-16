@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartClinicalSystem.Core.Contracts;
 using SmartClinicalSystem.Core.DTOs.Medicine;
 using SmartClinicalSystem.Core.Exceptions;
+using SmartClinicalSystem.Core.Exceptions.AlreadyExists;
 using SmartClinicalSystem.Infrastructure.Common;
 using SmartClinicalSystem.Infrastructure.Data.Models;
 

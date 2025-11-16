@@ -1,4 +1,4 @@
-﻿namespace SmartClinicalSystem.Core.DTOs.Doctor
+﻿namespace SmartClinicalSystem.Core.DTOs.AI
 {
     public class DiagnosisForMedicalReceiptDto
     {

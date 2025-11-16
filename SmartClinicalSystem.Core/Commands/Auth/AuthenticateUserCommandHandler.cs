@@ -3,6 +3,7 @@ using FluentValidation;
 using Microsoft.AspNetCore.Identity;
 using SmartClinicalSystem.Core.Contracts;
 using SmartClinicalSystem.Core.Exceptions;
+using SmartClinicalSystem.Core.Exceptions.Other;
 using SmartClinicalSystem.Infrastructure.Common;
 using SmartClinicalSystem.Infrastructure.Data.Models;
 using static SmartClinicalSystem.Core.DTOs.Auth.AuthDTOs;

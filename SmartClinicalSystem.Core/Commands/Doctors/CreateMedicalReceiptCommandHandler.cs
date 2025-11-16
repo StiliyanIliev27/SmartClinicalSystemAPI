@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SmartClinicalSystem.Core.Contracts;
 using SmartClinicalSystem.Core.DTOs.Doctor;
 using SmartClinicalSystem.Infrastructure.Data.Models;
-using System.Globalization;
+using static SmartClinicalSystem.Core.Helpers.DateFormatHelper;
 
 namespace SmartClinicalSystem.Core.Commands.Doctors
 {
@@ -14,7 +14,7 @@ namespace SmartClinicalSystem.Core.Commands.Doctors
     {
         public async Task<CreateMedicalReceiptResult> Handle(CreateMedicalReceiptCommand command, CancellationToken cancellationToken)
         {
-            if(!await AllMedicinesExistAsync(command.MedicalReceiptCreateDto.MedicineIds))
+            if(!await AllMedicinesExistAsync(command.MedicalReceiptCreateDto.Medicines.Select(m => m.MedicineId)))
             {
                 throw new Exception("One or more medicines do not exist.");
             }
@@ -29,35 +29,19 @@ namespace SmartClinicalSystem.Core.Commands.Doctors
 
             if (!string.IsNullOrEmpty(command.MedicalReceiptCreateDto.ExpirationDate))
             {
-                var dateFormats = new[] { "dd-MM-yyyy", "dd/MM/yyyy", "yyyy-MM-dd" };
-
-                if (DateTime.TryParseExact(
-                        command.MedicalReceiptCreateDto.ExpirationDate,
-                        dateFormats,
-                        CultureInfo.InvariantCulture,
-                        DateTimeStyles.None,
-                        out var parsedDate))
-                {
-                    medicalReceipt.ExpirationDate = parsedDate;
-                }
-                else
-                {
-                    throw new FormatException(
-                        $"Invalid date format: '{command.MedicalReceiptCreateDto.ExpirationDate}'. " +
-                        "Use one of: dd-MM-yyyy, dd/MM/yyyy, yyyy-MM-dd.");
-                }
+                medicalReceipt.ExpirationDate = ParseToDateTime(command.MedicalReceiptCreateDto.ExpirationDate);
             }
 
             ICollection<MedicalReceiptMedicine> medicalReceiptMedicines = new HashSet<MedicalReceiptMedicine>();
-            foreach (string medicineId in command.MedicalReceiptCreateDto.MedicineIds)
+            foreach (var medicine in command.MedicalReceiptCreateDto.Medicines)
             {
                 var medicalReceiptMedicine = new MedicalReceiptMedicine()
                 {
                     MedicalReceiptId = medicalReceipt.MedicalReceiptId,
-                    MedicineId = medicineId,
-                    DosageInstructions = command.MedicalReceiptCreateDto.DosageInstructions,
-                    DurationDays = command.MedicalReceiptCreateDto.DurationDays,
-                    Quantity = command.MedicalReceiptCreateDto.Quantity
+                    MedicineId = medicine.MedicineId,
+                    DosageInstructions = medicine.DosageInstructions,
+                    DurationDays = medicine.DurationDays,
+                    Quantity = medicine.Quantity
                 };
 
                 await repository.AddAsync(medicalReceiptMedicine);

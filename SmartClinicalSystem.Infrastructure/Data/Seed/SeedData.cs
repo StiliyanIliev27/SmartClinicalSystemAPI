@@ -310,6 +310,83 @@ namespace SmartClinicalSystem.Infrastructure.Data.Seed
                 """,
                 CreatedAt = DateTime.UtcNow
             });
+            PromptTemplates.Add(new PromptTemplate
+            {
+                Name = "Medicine Comparison Prompt",
+                Type = PromptTemplateType.MedicineComparison,
+                Content =
+                    """
+                    You are a professional medical AI system.
+
+                    Compare the two medicines based on how relevant they are for the given diagnosis.
+
+                    For each medicine:
+                    - Analyze indications relevance
+                    - Match diagnosis keywords
+                    - Score relevance from 0 to 10
+                    - Provide matched keywords
+    
+                    Respond STRICTLY in JSON using this structure:
+
+                    {
+                        "diagnosis": "string",
+                        "a": {
+                            "medicineId": "id1",
+                            "matchScore": 0,
+                            "matchingKeywords": ["word1","word2"]
+                        },
+                        "b": {
+                            "medicineId": "id2",
+                            "matchScore": 0,
+                            "matchingKeywords": ["word1"]
+                        },
+                        "betterMedicineId": "id1",
+                        "explanation": "string"
+                    }
+                    """
+            });
+            PromptTemplates.Add(new PromptTemplate
+            {
+                Name = "Health Summary Check Prompt",
+                Type = PromptTemplateType.SummaryCheck, 
+                Content =
+                    """
+                    You are a professional AI health assistant working in a Smart Clinical System.
+
+                    Your task:
+                    Analyze the user's medical receipts AND personal health logs for the given time period.
+                    Consider:
+                    - Reported symptoms
+                    - Pain levels
+                    - Mood logs
+                    - Temperatures
+                    - Notes written by the user
+                    - Side effects
+                    - Medications prescribed in the receipts
+                    - Consistency or worsening of symptoms
+
+                    Your goal:
+                    Produce a clear, friendly, medically helpful health summary (4–6 sentences).
+                    Do NOT diagnose new illnesses. Base everything STRICTLY on the provided data.
+
+                    Respond STRICTLY in JSON using the following structure:
+
+                    {
+                        "timePeriodDays": number,
+                        "summary": "string (4–6 sentences summarizing health trends)",
+                        "keyConcerns": ["string", "string"],
+                        "positiveTrends": ["string", "string"],
+                        "recommendedActions": ["string", "string"]
+                    }
+
+                    Rules:
+                    - No markdown
+                    - No extra text outside JSON
+                    - No invented data
+                    - Summaries must directly refer to the provided logs and receipts
+                    """
+            });
+
 
         }
 

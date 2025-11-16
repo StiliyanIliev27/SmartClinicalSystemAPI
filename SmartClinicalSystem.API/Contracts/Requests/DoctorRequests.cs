@@ -5,5 +5,6 @@ namespace SmartClinicalSystem.API.Contracts.Requests
     public static class DoctorRequests
     {
         public record CreateMedicalReceiptRequest(CreateMedicalReceiptDto createMedicalReceiptDto);
+        public record UpdateMedicalReceiptRequest(UpdateMedicalReceiptDto updateMedicalReceiptDto);
     }
 } 
