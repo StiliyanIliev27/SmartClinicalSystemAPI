@@ -9,5 +9,6 @@ namespace SmartClinicalSystem.Core.Contracts
         Task<DiagnoseResultDto?> GetDiagnosisAsync(string symptoms);
         Task<DiagnosisForMedicalReceiptDto> GetDiagnosisForMedicalReceiptAsync(MedicalReceipt medicalReceipt);
         Task<MedicineComparisonDto> GenerateComparisonReport(string firstMedicineId, string secondMedicineId, string diagnosis);
+        Task<string> SummarizeMedicalDataAsync(IEnumerable<MedicalReceipt> medicalReceipts, IEnumerable<UserHealthLog> healthLogs);
     }
 }

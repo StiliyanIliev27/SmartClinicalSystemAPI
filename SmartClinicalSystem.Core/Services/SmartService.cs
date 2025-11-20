@@ -364,5 +364,138 @@ namespace SmartClinicalSystem.Core.Services
 
             return aiResult;
         }
+
+        public async Task<string?> SummarizeMedicalDataAsync(
+            IEnumerable<MedicalReceipt> medicalReceipts,
+            IEnumerable<UserHealthLog> healthLogs)
+        {
+            // ---------------------------------------------
+            // 1. If no data, return basic summary
+            // ---------------------------------------------
+            if (!medicalReceipts.Any() && !healthLogs.Any())
+            {
+                return """
+                {
+                    "timePeriodDays": 0,
+                    "summary": "No medical data available for the selected period.",
+                    "keyConcerns": [],
+                    "positiveTrends": [],
+                    "recommendedActions": ["Record your symptoms consistently for better insights."]
+                }
+                """;
+            }
+
+            // ---------------------------------------------
+            // 2. Load prompt template
+            // ---------------------------------------------
+            var promptTemplate = await repository
+                .AllReadOnly<PromptTemplate>()
+                .Where(p => p.Type == PromptTemplateType.SummaryCheck && !p.IsDeleted)
+                .OrderByDescending(p => p.CreatedAt)
+                .FirstOrDefaultAsync();
+
+            var systemPrompt = promptTemplate!.Content;
+
+            // ---------------------------------------------
+            // 3. Build structured text (Receipts + Logs)
+            // ---------------------------------------------
+            string receiptsText = medicalReceipts.Any()
+                ? string.Join("\n", medicalReceipts.Select(r => 
+                $"""
+                    Receipt ID: {r.MedicalReceiptId}
+                    Diagnosis: {r.Diagnosis}
+                    Doctor's Advice: {r.Advice}
+                    AI Diagnosis: {r.AiDiagnosis}
+                    AI Advice: {r.AiAdvice}
+                    IssueDate: {r.IssueDate}
+                    Medicines:
+                    {string.Join("\n", r.MedicalReceiptsMedicines.Select(mrm =>
+                                $"- Medicine: {mrm.MedicineId}, Qty: {mrm.Quantity}, Duration: {mrm.DurationDays} days, Dosage: {mrm.DosageInstructions}"))}
+                """))
+                : "No medical receipts found.";
+
+            string logsText = healthLogs.Any()
+                ? string.Join("\n", healthLogs.Select(log => 
+                $"""
+                    Date: {log.CreatedAt}
+                    Symptoms: {log.Symptoms}
+                    PainLevel: {log.PainLevel}
+                    Mood: {log.Mood}
+                    Temperature: {log.Temperature}
+                    SideEffects: {log.SideEffects}
+                    Notes: {log.Notes}
+                """))
+                : "No user health logs found.";
+
+            string userMessage = 
+                $"""
+                User Medical Receipts:
+                {receiptsText}
+
+                User Health Logs:
+                {logsText}
+            """;
+
+            // ---------------------------------------------
+            // 4. Build request for GPT
+            // ---------------------------------------------
+            var chatClient = client.GetChatClient(model);
+
+            var messages = new List<ChatMessage>
+            {
+                ChatMessage.CreateSystemMessage(systemPrompt),
+                ChatMessage.CreateUserMessage(userMessage)
+            };
+
+            var response = await chatClient.CompleteChatAsync(messages);
+            var content = response.Value.Content?[0].Text;
+
+            if (string.IsNullOrWhiteSpace(content))
+                return null;
+
+            // ---------------------------------------------
+            // 5. Extract clean JSON from GPT output
+            // ---------------------------------------------
+            var jsonStart = content.IndexOf('{');
+            var jsonEnd = content.LastIndexOf('}');
+
+            if (jsonStart < 0 || jsonEnd < 0)
+                return """
+                {
+                    "summary": "AI returned invalid response.",
+                    "keyConcerns": [],
+                    "positiveTrends": [],
+                    "recommendedActions": []
+                }
+                """;
+
+            var json = content.Substring(jsonStart, jsonEnd - jsonStart + 1)
+                .Replace("`", "")
+                .Replace("'", "\"")
+                .Trim();
+
+            // Validate JSON
+            try
+            {
+                using var doc = JsonDocument.Parse(json);
+            }
+            catch
+            {
+                return """
+                {
+                    "summary": "AI output parsing failed.",
+                    "keyConcerns": [],
+                    "positiveTrends": [],
+                    "recommendedActions": []
+                }
+                """;
+            }
+
+            // ---------------------------------------------
+            // 6. Return JSON summary
+            // ---------------------------------------------
+            return json;
+        }
+
     }
 }

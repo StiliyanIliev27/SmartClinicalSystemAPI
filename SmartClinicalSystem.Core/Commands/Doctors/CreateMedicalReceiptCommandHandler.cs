@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using SmartClinicalSystem.Core.Contracts;
 using SmartClinicalSystem.Core.DTOs.Doctor;
+using SmartClinicalSystem.Infrastructure.Data.Enums;
 using SmartClinicalSystem.Infrastructure.Data.Models;
 using static SmartClinicalSystem.Core.Helpers.DateFormatHelper;
 
@@ -10,7 +11,9 @@ namespace SmartClinicalSystem.Core.Commands.Doctors
     public record CreateMedicalReceiptCommand(CreateMedicalReceiptDto MedicalReceiptCreateDto) 
         : ICommand<CreateMedicalReceiptResult>;
     public record CreateMedicalReceiptResult(string Id);
-    public class CreateMedicalReceiptCommandHandler(IRepository repository, ISmartService smartService) : ICommandHandler<CreateMedicalReceiptCommand, CreateMedicalReceiptResult>
+    public class CreateMedicalReceiptCommandHandler(IRepository repository, 
+        ISmartService smartService, INotificationService notificationService)
+        : ICommandHandler<CreateMedicalReceiptCommand, CreateMedicalReceiptResult>
     {
         public async Task<CreateMedicalReceiptResult> Handle(CreateMedicalReceiptCommand command, CancellationToken cancellationToken)
         {
@@ -63,6 +66,9 @@ namespace SmartClinicalSystem.Core.Commands.Doctors
 
             await repository.AddAsync(medicalReceipt);
             await repository.SaveChangesAsync();
+
+            await notificationService.SendNotificationAsync(command.MedicalReceiptCreateDto.PatientId,
+                "A new medical receipt has been created for you.", NotificationType.MedicalReceipt);
 
             return new CreateMedicalReceiptResult(medicalReceipt.MedicalReceiptId);
         }

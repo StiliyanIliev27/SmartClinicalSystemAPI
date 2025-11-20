@@ -29,7 +29,10 @@ namespace SmartClinicalSystem.API.Controllers
         [HttpGet("summary-check/{period}")]
         public async Task<IActionResult> SummaryCheck([FromRoute]int period)
         {
-            return Ok();
+            var result = await mediator.Send(new GetSummaryCheckQuery(period, User.GetUserId()));
+            return Ok(result);
         }
+
+
     }
 }

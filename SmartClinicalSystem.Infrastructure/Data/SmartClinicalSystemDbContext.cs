@@ -21,6 +21,9 @@ namespace SmartClinicalSystem.Infrastructure.Data
         public DbSet<MedicalReceipt> MedicalReceipts { get; set; } = null!;
         public DbSet<MedicalReceiptMedicine> MedicalReceiptsMedicines { get; set; } = null!;
         public DbSet<UserHealthLog> UserHealthLogs { get; set; } = null!;
+        public DbSet<UserHealthLogToDoctor> UserHealthLogsToDoctors { get; set; } = null!;
+        public DbSet<PatientDoctor> PatientsDoctors { get; set; } = null!;
+        public DbSet<Notification> Notifications { get; set; } = null!;
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfiguration(new MedicinesConfiguration());
