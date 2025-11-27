@@ -23,6 +23,13 @@ namespace SmartClinicalSystem.API.Controllers
             return Ok(response);
         }
 
+        [HttpGet("health-log/{id}")]
+        public async Task<IActionResult> GetHealthLogById([FromRoute] string id)
+        {
+            var response = await mediator.Send(new GetHealthLogByIdQuery(id));
+            return Ok(response);
+        }
+
         [HttpGet]
         public async Task<IActionResult> GetCurrentUserHealthLogs()
         {

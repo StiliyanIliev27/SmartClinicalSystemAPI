@@ -28,6 +28,9 @@ namespace SmartClinicalSystem.API
 
             app.UseHttpsRedirection();
 
+            app.UseCors("AllowFrontend");
+
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseExceptionHandler(option => { });

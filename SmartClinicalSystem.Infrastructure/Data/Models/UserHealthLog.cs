@@ -22,6 +22,8 @@ namespace SmartClinicalSystem.Infrastructure.Data.Models
 
         public DateTime CreatedAt { get; set; } = DateTime.Now;
         public DateTime? UpdatedAt { get; set; }
+
+        public UserHealthLogToDoctor? UserHealthLogToDoctor { get; set; }
     }
 
 }

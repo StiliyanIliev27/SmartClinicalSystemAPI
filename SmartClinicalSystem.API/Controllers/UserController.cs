@@ -25,5 +25,19 @@ namespace SmartClinicalSystem.API.Controllers
             var response = await mediator.Send(new GetNotificationsQuery(User.GetUserId()));
             return Ok(response);
         }
+
+        [HttpGet("user-dashboard")]
+        public async Task<IActionResult> GetUserDashboardStats()
+        {
+            var response = await mediator.Send(new GetDashboardStatsQuery(User.GetUserId()));
+            return Ok(response);
+        }
+
+        [HttpGet("ai-zone-dashboard")]
+        public async Task<IActionResult> GetAiZoneStats()
+        {
+            var response = await mediator.Send(new GetAiZoneQuery(User.GetUserId()));
+            return Ok(response);
+        }
     }
 }

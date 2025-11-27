@@ -65,10 +65,23 @@ namespace Microsoft.Extensions.DependencyInjection
                 });
             });
 
-            
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend",
+                    policy =>
+                    {
+                        policy.WithOrigins("http://localhost:5173") // Front end url
+                              .AllowAnyHeader()
+                              .AllowAnyMethod()
+                              .AllowCredentials();
+                    });
+            });
+
+
 
             services.AddScoped<IJwtService, JwtService>();
             services.AddScoped<ISmartService, SmartService>();
+            services.AddScoped<INotificationService, NotificationService>();
 
             return services;
         }
